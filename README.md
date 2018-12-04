@@ -16,5 +16,7 @@ Curso de NodeJs
 - nodemon
   - npm i --save nodemon
   - ./node_modules/.bin/nodemon server.js
+  
+  node7964
 
 
