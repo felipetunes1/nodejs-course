@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Produtos</title>
+    </head>
+    <body>
+        <h2>Lista de Produtos</h2>
+        <ul>
+            <% for(produto of listaProdutos) { %>
+                <li>
+                    <%= produto.titulo %> - R$ <%= produto.preco %>
+                </li>
+            <% } %>
+        </ul>
+    </body>
+</html>
