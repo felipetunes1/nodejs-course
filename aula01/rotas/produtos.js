@@ -5,15 +5,18 @@
 
 function getProdutos (app) {
 
-    const produtoDao = require('../jdbc/produtosDao');
+    const ProdutoDao = require('../jdbc/produtosDao');
+    const Produto = require('../dto/produtoDto');
 
     const render = (response, result) => {
-        response.render("produtos" , {
+        console.log(`## produtos -> render in\n`);
+        response.render("produtos/lista" , {
             listaProdutos : result
         });
     }
 
     const send = (response, result) => {
+        console.log(`## produtos -> send in\n`);
         response.send({
             listaProdutos : result
         });
@@ -21,8 +24,13 @@ function getProdutos (app) {
 
     app.get('/produtos', (request, response) => {
 
+        console.log(`\n## produtos -> /produtos in`);
+
+        const produtoDao = new ProdutoDao();
+
         produtoDao.getAllProdutos((result) => {
-            send(response, result)
+            console.log(`## produtos -> /produtos out`);
+            render(response, result)
         });
 
         // let produtos = ``;
@@ -42,12 +50,45 @@ function getProdutos (app) {
         // `);
     });
 
+    app.post('/produtos', (req, res) => {
+        console.log(`\n$$ produtos > /produtos in`);
+
+        console.log('$$req.body : ' , req.body);
+
+        let produto = new Produto();
+ 
+        produto.init(req.body.titulo, req.body.preco, req.body.descricao);
+ 
+        const produtoDao = new ProdutoDao();
+
+        produtoDao
+            .insertProduto(produto)
+            .then((result) => {
+                console.log(`\n$$ produtos > /produtos out success`);
+                res.send(`Voce cadastrou um produto =)`);
+            }).catch((error) => {
+                console.log(`\n$$ produtos > /produtos out error`);
+                res.send(`Erro ao cadastrar o produto =(`);
+            });
+    })
+
+    app.get('/produtos/form', (req, res) => {
+        console.log(`\n## produtos -> produtos/form in`);
+        res.render('produtos/form');
+    })
+
     app.get('/produtos/:id', (req, response) => {
+        console.log(`\n## produtos -> /produtos/:id`);
+
+        const produtoDao = new ProdutoDao();
+
         produtoDao.getProdutoById(req.params.id, (result) => {
-            send(response, result)
+            console.log(`## produtos -> /produtos/:id out`);
+            render(response, result)
         })
 
     })
+
 }
 
 module.exports = getProdutos;

@@ -1,7 +1,9 @@
 function getHome (app) {
     app.get('/', (request, response) => {
-        // response.send(`Home !!!`);
+        
+        console.log(`\n## home -> / in`);
         response.render("home");
+
     });
 }
 

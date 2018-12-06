@@ -1,32 +1,29 @@
-const Produto = function () {
-    var id;
-    var titulo;
-    var preco;
+class ProdutoDao {
 
-    var toString = () => {
-        console.log(this)
-        return `id , titulo , preco , descricao` 
+    constructor() {
+        this.ConnectionFactory = require("./connectionFactory"); 
     }
-    this.id = id;
-    this.toString = toString;
+
+    getProdutos (where, callback) {
+        console.log(`## produtosDAO -> getProdutos in`);
+        new this.ConnectionFactory().getQuery(`id , titulo , preco , descricao`, `livros`, where, callback);
+    }
+
+    getAllProdutos (callback) {
+        console.log(`## produtosDAO -> getAllProdutos in`);
+        this.getProdutos(``, callback);
+    }
+
+    getProdutoById (id, callback) {
+        console.log(`## produtosDAO -> getProdutoById in`);
+        this.getProdutos(`livros.id = ${id}`, callback);
+    }
+
+    insertProduto (produto) {
+        return new this.ConnectionFactory()
+                .insert(`titulo, preco, descricao`
+                    , `livros`
+                    , `'${produto.getTitulo()}' , ${produto.getPreco()} , '${produto.getDescricao()}'`);
+    }
 }
-
-let produto = new Produto();
-
-const getProdutos = (where, callback) => {
-    console.log(produto.toString())
-    require("./connectionFactory").getQuery(produto.toString(), `livros`, where, callback);
-}
-
-const getAllProdutos = (callback) => {
-    getProdutos(``, callback);
-}
-
-const getProdutoById = (id, callback) => {
-    getProdutos(`livros.id = ${id}`, callback);
-}
-
-module.exports = {
-    getAllProdutos : getAllProdutos,
-    getProdutoById : getProdutoById
-};
+module.exports = ProdutoDao;
