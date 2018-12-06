@@ -21,3 +21,9 @@ Curso de NodeJs
 
 
 - wetransfer.com
+
+# Validator
+
+- yup
+- joi
+- express-validator
