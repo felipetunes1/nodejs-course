@@ -17,7 +17,7 @@ class ConnectionFactory {
         this.connection = this.getConnection();
     }
 
-    getQuery (campo, table, where, callback)  {
+    get (campo, table, where, callback)  {
         console.log(`## connectionFactory -> getQuery in`);
         this.connection.query(`select ${campo} from ${table} ${where ? `where ${where}` : ``}`, (err, result) => {
             console.log(`## connectionFactory -> getQuery out`);

@@ -1,12 +1,13 @@
+const ConnectionFactory = require("./connectionFactory"); 
 class ProdutoDao {
 
     constructor() {
-        this.ConnectionFactory = require("./connectionFactory"); 
+        this.connectionFactory = new ConnectionFactory();
     }
 
     getProdutos (where, callback) {
         console.log(`## produtosDAO -> getProdutos in`);
-        new this.ConnectionFactory().getQuery(`id , titulo , preco , descricao`, `livros`, where, callback);
+        this.connectionFactory.get(`id , titulo , preco , descricao`, `livros`, where, callback);
     }
 
     getAllProdutos (callback) {
@@ -20,7 +21,7 @@ class ProdutoDao {
     }
 
     insertProduto (produto) {
-        return new this.ConnectionFactory()
+        return this.connectionFactory
                 .insert(`titulo, preco, descricao`
                     , `livros`
                     , `'${produto.getTitulo()}' , ${produto.getPreco()} , '${produto.getDescricao()}'`);
