@@ -1,0 +1,18 @@
+<ul>
+</ul>
+<script>
+setInterval(() => {    
+    fetch("http://localhost:3000/produtos/", {
+        headers : {
+            'Accept' : 'application/json'
+        }
+    })
+    .then( async (response) => {
+        const resultado = await response.json()
+        const listaEmHtml = resultado.listaProdutos.map((produto) => {
+            return `<li>${produto.titulo}</li>`
+        }).join('');
+        document.querySelector('ul').innerHTML = listaEmHtml
+    })
+}, 10000);
+</script>

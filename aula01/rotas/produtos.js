@@ -27,10 +27,19 @@ function getProdutos (app) {
         console.log(`\n## produtos -> /produtos in`);
 
         const produtoDao = new ProdutoDao();
+        response.setHeader("Access-Control-Allow-Origin", "*");
 
         produtoDao.getAllProdutos((result) => {
             console.log(`## produtos -> /produtos out`);
-            render(response, result)
+
+            response.format({
+                html : function (){
+                    render(response, result)
+                } ,
+                json : function (){
+                    send(response, result)
+                }
+            })
         });
 
         // let produtos = ``;
@@ -58,23 +67,81 @@ function getProdutos (app) {
         let produto = new Produto();
  
         produto.init(req.body.titulo, req.body.preco, req.body.descricao);
- 
-        const produtoDao = new ProdutoDao();
 
-        produtoDao
-            .insertProduto(produto)
+        produto.validator()
             .then((result) => {
-                console.log(`\n$$ produtos > /produtos out success`);
-                res.send(`Voce cadastrou um produto =)`);
-            }).catch((error) => {
-                console.log(`\n$$ produtos > /produtos out error`);
-                res.send(`Erro ao cadastrar o produto =(`);
-            });
+                const produtoDao = new ProdutoDao();
+                produtoDao
+                    .insertProduto(produto)
+                    .then((result) => {
+                        console.log(`\n$$ produtos > /produtos out success`);
+                        console.log(result)
+
+                        res.status(201)
+
+                        res.format({
+                            html : function (){
+                                res.send(`Voce cadastrou um produto =)`);
+                            } ,
+                            json : function (){
+                                res.send({
+                                    success : `Voce cadastrou um produto =)`
+                                })
+                            }
+                        })
+
+                    }).catch((error) => {
+                        console.log(`\n$$ produtos > /produtos out error`);
+                        res.status(400)
+                        res.format({
+                            html : function (){
+                                res.send(`Erro ao cadastrar o produto =(`);
+                            } ,
+                            json : function (){
+                                res.send({
+                                    errors : `Erro ao cadastrar o produto =(`
+                                })
+                            }
+                        })
+        
+                        
+                    });
+            })
+            .catch((error)=>{
+                // res.send(`Erro ao cadastrar o produto =(<br/>${JSON.stringify(error)}`);
+                res.status(400)
+                res.format({
+                    html : function (){
+                        res.render('produtos/form', {
+                            errors : error.details 
+                        });
+                            } ,
+                    json : function (){
+                        res.send({
+                            errors : error.details 
+                        })
+                    }
+                })
+
+            })
+ 
     })
 
     app.get('/produtos/form', (req, res) => {
         console.log(`\n## produtos -> produtos/form in`);
-        res.render('produtos/form');
+        res.format({
+            html : function (){
+                res.render('produtos/form');
+            } ,
+            json : function (){
+                res.status(404);
+                res.send({
+                    message : 'Error 404: Not Found'
+                })
+            }
+        })
+        
+        
     })
 
     app.get('/produtos/:id', (req, response) => {
@@ -84,7 +151,15 @@ function getProdutos (app) {
 
         produtoDao.getProdutoById(req.params.id, (result) => {
             console.log(`## produtos -> /produtos/:id out`);
-            render(response, result)
+            response.format({
+                html : function (){
+                    render(response, result)
+                } ,
+                json : function (){
+                    send(response, result)
+                }
+            })
+    
         })
 
     })
