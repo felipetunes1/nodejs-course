@@ -27,3 +27,7 @@ Curso de NodeJs
 - yup
 - joi
 - express-validator
+
+- mario.souto@caelum.com.br
+- @omariosouto
+
