@@ -14,5 +14,18 @@ setInterval(() => {
         }).join('');
         document.querySelector('ul').innerHTML = listaEmHtml
     })
-}, 10000);
+}, Math.random() * 2000);
 </script>
+
+fetch("http://localhost:3000/produtos/", {
+	method : "POST",	
+	headers : {
+        'Accept' : 'application/json',
+        'Content-type' : 'application/json'
+    },
+    body : JSON.stringify({
+        "titulo" : "teste",
+        "preco" : 500,
+        "descricao" : "gkldnsgojsogdj"
+    })
+})
